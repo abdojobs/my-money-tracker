@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{0D444C10-3F14-4A91-9D98-869602EC0DE0}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>WinExe</OutputType>
+    <MyType>WindowsForms</MyType>
+    <RootNamespace>MoneyTracker</RootNamespace>
+    <AssemblyName>Money Tracker</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <OptionInfer>On</OptionInfer>
+    <SourceAnalysisOverrideSettingsFile>C:\Users\Zor Derelda\AppData\Roaming\ICSharpCode/SharpDevelop4\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <RemoveIntegerChecks>False</RemoveIntegerChecks>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionStrict>Off</OptionStrict>
+    <OptionCompare>Binary</OptionCompare>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
+    <RunSourceAnalysis>False</RunSourceAnalysis>
+    <ApplicationIcon>..\tracking.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <DefineConstants>DEBUG=1,TRACE=1</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <DefineConstants>TRACE=1</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LumenWorks.Framework.IO">
+      <HintPath>..\External DLLs\LumenWorks.Framework.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="MyInterface.SQLite.SQLiteDBInterface">
+      <HintPath>..\..\SqlLiteInterface\SqlLiteInterface\bin\Release\MyInterface.SQLite.SQLiteDBInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\SqlLiteInterface\SqlLiteInterface\bin\Release\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CSVLoader.Designer.vb">
+      <DependentUpon>CSVLoader.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CSVLoader.vb" />
+    <Compile Include="CSVLoaderForm.Designer.vb">
+      <DependentUpon>CSVLoaderForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CSVLoaderForm.vb" />
+    <Compile Include="CSVLoaderProgress.Designer.vb">
+      <DependentUpon>CSVLoaderProgress.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CSVLoaderProgress.vb" />
+    <Compile Include="DBRawViewForm.Designer.vb">
+      <DependentUpon>DBRawViewForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DBRawViewForm.vb" />
+    <Compile Include="DBSearchForm.Designer.vb">
+      <DependentUpon>DBSearchForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DBSearchForm.vb" />
+    <Compile Include="DBUpdaterCategoriesForm.Designer.vb">
+      <DependentUpon>DBUpdaterCategoriesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DBUpdaterCategoriesForm.vb" />
+    <Compile Include="DBUpdaterInfoControl.Designer.vb">
+      <DependentUpon>DBUpdaterInfoControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DBUpdaterInfoControl.vb" />
+    <Compile Include="DBUpdaterForm.Designer.vb">
+      <DependentUpon>DBUpdaterForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DBUpdaterForm.vb" />
+    <Compile Include="DBUpdaterNotesForm.Designer.vb">
+      <DependentUpon>DBUpdaterNotesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DBUpdaterNotesForm.vb" />
+    <Compile Include="Globals.vb" />
+    <Compile Include="MainForm.Designer.vb">
+      <DependentUpon>MainForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.vb" />
+    <Compile Include="Program.vb" />
+    <Compile Include="Properties\AssemblyInfo.vb" />
+    <Compile Include="SQLiteDBInterfaceClass.vb" />
+    <Compile Include="WriteXMLConfig.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CSVLoader.resx">
+      <DependentUpon>CSVLoader.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CSVLoaderForm.resx">
+      <DependentUpon>CSVLoaderForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CSVLoaderProgress.resx">
+      <DependentUpon>CSVLoaderProgress.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBRawViewForm.resx">
+      <DependentUpon>DBRawViewForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBSearchForm.resx">
+      <DependentUpon>DBSearchForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBUpdaterCategoriesForm.resx">
+      <DependentUpon>DBUpdaterCategoriesForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBUpdaterForm.resx">
+      <DependentUpon>DBUpdaterForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBUpdaterInfoControl.resx">
+      <DependentUpon>DBUpdaterInfoControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DBUpdaterNotesForm.resx">
+      <DependentUpon>DBUpdaterNotesForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.Designer.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.Targets" />
+</Project>
