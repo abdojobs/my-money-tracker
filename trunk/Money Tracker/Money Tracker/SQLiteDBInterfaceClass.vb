@@ -6,6 +6,12 @@
 ' Jeff Walsh - Game Associated Programming®
 ' 
 '
+Imports System.IO
+Imports System.Linq
+Imports System.Xml
+Imports System.Xml.Linq
+Imports System.Data
+Imports System.Data.Linq
 Imports MyInterface.SQLite
 
 Public Class SQLiteDBInterfaceClass
@@ -27,16 +33,17 @@ Public Class SQLiteDBInterfaceClass
 	
 	Public Sub New()
 		
+		Dim dbElement() As XElement = g_config.GetDatabases
+		
 		' Check to see if the databas is there
 		If Not FileIO.FileSystem.FileExists(databaseFileName) Then
 			
 			' Need to create the file
 			m_sql = New SQLiteDatabase(databaseFileName, True)
-		
-			' Need to do this with money as well once I have it developed
-			m_sql.ExecuteNonQuery("CREATE TABLE " + m_tableName + " (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,bank TEXT NULL,name TEXT NULL,out TEXT NULL,in TEXT NULL,date DATE NULL,comment TEXT NULL,categories TEXT NULL,subcategories TEXT NULL);")
-			m_sql.ExecuteNonQuery("CREATE TABLE " + m_catTableName + " (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,name TEXT NULL);")
-			m_sql.ExecuteNonQuery("CREATE TABLE " + subCatTableName + " (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,name TEXT NULL,owner INTEGER NULL);")
+			
+			For Each item As XElement In dbElement
+				m_sql.ExecuteNonQuery(item.<create>.Value)
+			Next
 			
 		Else
 			
@@ -45,7 +52,16 @@ Public Class SQLiteDBInterfaceClass
 			
 		End If
 		
+		' Setup proper names
+		m_tableName = dbElement(0).<name>.Value
+		m_catTableName = dbElement(1).<name>.Value
+		subCatTableName = dbElement(2).<name>.Value
+		
 	End Sub
+	
+	Public Function InsertData(d As String) As Boolean
+		Return m_sql.Insert(m_tableName, d)
+	End Function
 	
 	Public ReadOnly Property Sql() As SQLiteDatabase
 		Get

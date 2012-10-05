@@ -8,8 +8,14 @@
 '
 Imports System
 Imports System.IO
+Imports System.Linq
 Imports System.Xml
+Imports System.Xml.Linq
+Imports System.Data
+Imports System.Data.Linq
 Imports System.Globalization
+Imports System.Collections
+Imports System.Collections.Specialized
 Imports LumenWorks.Framework.IO.Csv
 Imports MyInterface.SQLite
 
@@ -17,16 +23,10 @@ Public Partial Class CSVLoader
 	Inherits System.Windows.Forms.UserControl
 	
 	' Private variable for the Progress Loader Bar
-	Private csvLoaderProgress As CSVLoaderProgress
+	Private loaderProgressBar As LoaderProgressBar
 	
 	' Private variable for when I am changing the check boxes
 	Private changingChecks As Boolean
-	
-	' Private variable containing the KeyPairValues
-	Private banks As New List(Of Tuple(Of String, String, String, String))
-	
-	' Private variable to track what the temporary database uses
-	Private tempdb As New Dictionary(Of String, String)
 	
 	' Private variable for where I got my last file
 	Private curwd As String
@@ -37,78 +37,20 @@ Public Partial Class CSVLoader
 		changingChecks = False
 		curwd = Directory.GetCurrentDirectory()
 		
-		' Temp string array for the bank names to be loaded
-		Dim tempbanknames As New List(Of String)
-		
-		' Load the resources XML
-		Try
-			
-			' Check to see if the resources file is there
-			If Not FileIO.FileSystem.FileExists("resources.xml") Then
-				
-				' Need to create the file
-				Dim xmlwriter As New WriteXMLConfig
-				
-			End If
-			
-			Dim xmldoc As New XmlDocument
-			Dim xmlnodelist As XmlNodeList
-			xmldoc.Load("resources.xml")
-			
-			' Load up the XML with the banks info in it
-			xmlnodelist = xmldoc.SelectNodes("//banks/bank")
-			
-			For Each xmlnode As XmlNode In xmlnodelist
-				
-				' Add the name to the temp array
-				tempbanknames.Add(xmlnode.ChildNodes.Item(0).InnerText.Trim)
-				
-				' Add all information to the banks tuple
-				banks.Add(Tuple.Create(xmlnode.ChildNodes.Item(0).InnerText.Trim, _
-								xmlnode.ChildNodes.Item(1).InnerText.Trim, _
-								xmlnode.ChildNodes.Item(2).InnerText.Trim, _
-								xmlnode.ChildNodes.Item(3).InnerText.Trim))
-				
-			Next
-			
-			' Load up the XML with the temporary database info in it
-			xmlnodelist = xmldoc.SelectNodes("//databases/database")
-			
-			For Each xmlnode As XmlNode In xmlnodelist
-				
-				tempdb.Add(xmlnode.ChildNodes.Item(0).InnerText.Trim, xmlnode.ChildNodes.Item(1).InnerText.Trim)
-				
-			Next
-			
-		Catch ex As Exception
-			
-			'Error trapping
-			Debug.Write(ex.ToString())
-			
-		End Try
-		
 		' Initialize
 		Me.InitializeComponent()
 		
-		' Fix for the loss of CSVLoaderProgress Bar
+		' Fix for the loss of LoaderProgressBar Bar
 		Me.SuspendLayout
-		Me.csvLoaderProgress = New CSVLoaderProgress()
-		Me.csvLoaderProgress.Enabled = false
-		Me.csvLoaderProgress.Location = New System.Drawing.Point(98, 30)
-		Me.csvLoaderProgress.Name = "csvLoaderProgress"
-		Me.csvLoaderProgress.Size = New System.Drawing.Size(211, 52)
-		Me.csvLoaderProgress.TabIndex = 5
-		Me.csvLoaderProgress.Visible = False
-		Me.Controls.Add(Me.csvLoaderProgress)
+		Me.loaderProgressBar = New LoaderProgressBar()
+		Me.loaderProgressBar.Enabled = false
+		Me.loaderProgressBar.Location = New System.Drawing.Point(98, 30)
+		Me.loaderProgressBar.Name = "loaderProgressBar"
+		Me.loaderProgressBar.Size = New System.Drawing.Size(211, 52)
+		Me.loaderProgressBar.TabIndex = 5
+		Me.loaderProgressBar.Visible = False
+		Me.Controls.Add(Me.loaderProgressBar)
 		Me.ResumeLayout
-		
-		' Assign the bank names to the combobox
-		For Each item As String In tempbanknames
-			comboBoxBankType.Items.Add(item)
-		Next
-		
-		' Set the combo box to first item
-		comboBoxBankType.SelectedIndex = 1
 		
 	End Sub
 	
@@ -165,14 +107,17 @@ Public Partial Class CSVLoader
 	Sub ButtonLoadClick(sender As Object, e As EventArgs)
 		
 		' Make the form disapear
-		For Each cControl As System.Windows.Forms.Control In Me.Controls
+		For Each cControl As Control In Me.Controls
 			cControl.Visible = False
 			cControl.Enabled = False
 		Next
 		
 		' Now show the progress bar
-		csvLoaderProgress.Visible = True
-		csvLoaderProgress.Enabled = True
+		loaderProgressBar.Visible = True
+		loaderProgressBar.Enabled = True
+		
+		' Old filename for checking
+		Dim oldfilename As String = openFileDialog.FileName
 		
 		' Call the loading portion of the control
 		If performReading() Then
@@ -180,15 +125,18 @@ Public Partial Class CSVLoader
 			' Check to see if we mark or delete this file
 			If checkBoxMarked.Checked Then
 				
-				' Ok we want to load this and then add INPUT to the first line
-				Dim reader As TextReader = New StreamReader(openFileDialog.FileName)
-				Dim all As String = reader.ReadToEnd
+				Dim reader As TextReader = Nothing
+				Dim writer As TextWriter = Nothing
+				Dim all As String = Nothing
 				
+				' Ok we want to load this and then add INPUT to the first line
+				reader = New StreamReader(oldfilename)
+				all = reader.ReadToEnd
 				
 				reader.Close
 				reader = Nothing
 				
-				Dim writer As TextWriter = New StreamWriter(openFileDialog.FileName)
+				writer = New StreamWriter(oldfilename)
 				writer.WriteLine("INPUT")
 				writer.Write(all)
 				writer.Close
@@ -197,7 +145,7 @@ Public Partial Class CSVLoader
 			Else If checkBoxDelete.Checked
 				
 				' Ok we want to delete this file
-				File.Delete(openFileDialog.FileName)
+				File.Delete(oldfilename)
 				
 			End If
 			
@@ -210,8 +158,8 @@ Public Partial Class CSVLoader
 		Next
 		
 		' Wait for user to say ok then make progress invisable and disabled again
-		csvLoaderProgress.Visible = False
-		csvLoaderProgress.Enabled = False
+		loaderProgressBar.Visible = False
+		loaderProgressBar.Enabled = False
 		
 		' Reset the filename box to not be able to edit
 		textBoxFileName.Enabled = False
@@ -229,78 +177,85 @@ Public Partial Class CSVLoader
 	
 	Private Function performReading() As Boolean
 		
-		' Open the file to get the number of lines
+		' Reader
 		Dim reader As TextReader = New StreamReader(openFileDialog.FileName)
 		
 		' Check the VERY first line and see if this data is already there
 		Dim first As String = reader.ReadLine.Trim.Replace(vbLf, "")
 		
 		If first = "INPUT" Then
-			MessageBox.Show(String.Format("{0} has already been input into database!", Path.GetFileName(openFileDialog.FileName))) 
+			
+			' If the reset is set then input anyway after removing the INPUT
+			If checkBoxReset.Checked Then
+				
+				' Ok we want to load this and then add INPUT to the first line
+				Dim all As String = reader.ReadToEnd
+				'all = all.Remove(0, all.IndexOf(vbNewLine))
+				
+				reader.Close
+				reader = Nothing
+				
+				Dim writer As New StreamWriter(openFileDialog.FileName)
+				writer.Write(all)
+				writer.Close
+				writer = Nothing
+				
+			Else
+				reader.Close
+				reader = Nothing
+				
+				MessageBox.Show(String.Format("{0} has already been input into database!", Path.GetFileName(openFileDialog.FileName))) 
+				Return False
+				
+			End If
+			
+		' Fix for reset and not reset
+		Else
+			
+			' Close the reader so we can get first line again
+			reader.Close
+			reader = Nothing
+			
+		End If
+		
+		' Reopen
+		reader = New StreamReader(openFileDialog.FileName)
+			
+		' Now that we have found the bank we have to clean the file
+		' Now we know which bank it is lets sort the data and output it to a writer
+		Dim unifier As New CSVUnificationClass()
+		Dim nm As String = unifier.CleanLines(openFileDialog.FileName)
+		
+		If nm = Nothing Then
+			MessageBox.Show("Error, nothing done!  Fill in the identification!", "Error", MessageBoxButtons.OK,MessageBoxIcon.Error)
 			Return False
+		Else
+			openFileDialog.FileName = nm
 		End If
 		
 		' Ok its loaded so lets set some stuff in the progress bar info
-		csvLoaderProgress.progressBar.Minimum = 0
-		csvLoaderProgress.progressBar.Maximum = Split(reader.ReadToEnd, vbLf).Length
-		csvLoaderProgress.progressBar.Value = 0
-		csvLoaderProgress.progressBar.Step = 1
+		loaderProgressBar.progressBar.Minimum = 0
+		loaderProgressBar.progressBar.Maximum = Split(reader.ReadToEnd, vbLf).Length
+		loaderProgressBar.progressBar.Value = 0
+		loaderProgressBar.progressBar.Step = 1
 		
 		reader.Close
 		reader = Nothing
 		
-		' This is the banking information that will be used to create the sql query
-		Dim bank As String = Nothing
-		Dim columns As String() = Nothing
-		Dim columnstouse As String() = Nothing
-		Dim dateformat As String = Nothing
-		Dim datedelim As String = Nothing
+		' Counter
+		Dim counter As Integer = 0
 		
-		'****TODO, NEED TO FIGURE OUT HOW TO ELIMINATE ANY ENTRIES WHERE I RETURNED MY ITEMS
-				
-		' Find out which bank we are using and set it up
-		For Each tuple As Tuple(Of String, String, String, String) In banks
-			
-			' Check to see if they match
-			If comboBoxBankType.SelectedItem.ToString = tuple.Item1 Then
-				
-				' Assign the bank
-				bank = tuple.Item1
-				
-				' Now setup the columns
-				columns = tuple.Item2.Split(New Char() {","c})
-				
-				' Set the date format
-				dateformat = tuple.Item3
-				
-				' Set the delimiter
-				datedelim = tuple.Item4
-				
-				' Get out of the loop
-				Exit For
-				
-			End If
-			
+		' For the standard bank stuff
+		Dim standard As New Dictionary(Of String, Integer)
+		
+		' Put bank at the begining
+		standard.Add("bank", counter)
+		
+		' Now loop through and get the rest
+		For Each item In Split(g_config.GetStandard.<columns>.Value, ",")
+			counter += 1
+			standard.Add(item, counter)
 		Next
-		
-		' Find out which columns we want in the temporary database
-		For Each kvp As KeyValuePair(Of String, String) In tempdb
-			
-			' Check for the temp database
-			If kvp.Key = g_sql.TableName Then
-				
-				' Now setup the columns
-				columnstouse = kvp.Value.Split(New Char() {","c})
-				
-				' Get out of the loop
-				Exit For
-				
-			End If
-			
-		Next
-		
-		' The string holder for the data to input into DB
-		Dim data As String = String.Format("bank=>{0}|", bank)
 		
 		' Read the file and get the rows
 		reader = New StreamReader(openFileDialog.FileName)
@@ -313,45 +268,14 @@ Public Partial Class CSVLoader
 		While csvReader.ReadNextRecord
 			
 			' Step the progress bar
-			csvLoaderProgress.progressBar.PerformStep
-						
-			' Read the data and send it to the database Name=>Value|Name=>Value
-			For x = 0 To fieldCount
-				
-				' Check to see if we are going to use this field
-				For Each item As String In columnstouse
-					
-					If columns(x) = item Then
-						
-						Dim temp As String = csvReader(x).Trim
-						
-						' Check to see if the length is 0
-						If temp.Length < 1 Then
-							'Get outa here
-							GoTo SkipLoop
-						End If
-						
-						' Check to see if its an out and its in the negative, because this is a payment and don't want it
-						If columns(x) = "out" And temp.Contains("-") Then
-							'Get outa here
-							GoTo SkipLoop
-						End If
-						
-						' Check to see if this is a date
-						If columns(x) = "date" And Not bank = "CIBC" Then
-							
-							temp = FixDate(temp, dateformat, datedelim)
-							
-						End If
-						
-						data += String.Format("{0}=>{1}|", columns(x), temp)
-						
-						'Get outa here
-						Exit For
-						
-					End If
-					
-				Next
+			loaderProgressBar.progressBar.PerformStep
+			
+			Dim data As String = Nothing
+			counter = -1
+			
+			For Each pair As KeyValuePair(Of String, Integer) In standard
+			
+				data += String.Format("{0}=>{1}|", pair.Key, csvReader(pair.Value))
 				
 			Next
 			
@@ -359,77 +283,30 @@ Public Partial Class CSVLoader
 			data = data.Substring(0, data.Length-1)
 			data.Trim
 			
-			' Clean up some of the stuff that will fuck up an sql
-			data = CleanEscape(data)
-			
 			' Dump the data into the SQL
-			If Not g_sql.Sql.Insert(g_sql.TableName, data) Then
+			If Not g_sql.InsertData(data) Then
 				Throw New ApplicationException("Error With SQL")
 				Return False
 			End If
 			
-			SkipLoop:
-			
-			' Reset data
-			data = String.Format("bank=>{0}|", bank)
-			
 		End While
 		
+		' Close the reader
 		reader.Close
 		reader = Nothing
+		
+		' Delete the temp file
+		File.Delete(openFileDialog.FileName)
 		
 		Return True
 		
 	End Function
 	
-	' Fixes the date to this YYYY-MM-DD
-	Private Function FixDate(ByVal tofix As String, ByVal format As String, ByVal delim As String) As String
-		
-		Dim splitfix As String() = tofix.Split(delim.Chars(0))
-		Dim splitformat As String() = format.Split(New Char() {"."c})
-		
-		Dim d As String = Nothing
-		Dim m As String = Nothing
-		Dim y As String = Nothing
-		Dim count As Integer = -1
-		
-		For Each item As String In splitformat
-			
-			count += 1
-			
-			Select Case item
-					
-				Case "d"
-					d = splitfix(count)
-					
-			    Case "m"
-			    	m = splitfix(count)
-			    	
-			    Case "y"
-			    	y = splitfix(count)
-			    	
-			End Select
-			
-		Next
-		
-		Return String.Format("{0}-{1}-{2}", y, m, d)
-		
-	End Function
 	
-	Private Function CleanEscape(ByVal str As String) As String
-		
-		Dim esc() As String = {"\", "~", "!", "{", "%", "}", "^", "'", "&", "(", ")", "`"}
-		
-		For Each ch As String In esc
-			
-			If str.Contains(ch) Then
-				str = str.Replace(ch, "")
-			End If
-			
-		Next
-		
-		Return str
-		
-	End Function
 	
 End Class
+
+' **************************************************
+'	todo
+' **************************************************
+' Fix curwd to use a global last directory opened

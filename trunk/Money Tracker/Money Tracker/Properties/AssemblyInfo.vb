@@ -10,7 +10,7 @@ Imports System.Runtime.InteropServices
 
 <assembly: AssemblyTitle("Money Tracker")>
 <assembly: AssemblyDescription("This is a the main program in Money Tracker Software")>
-<assembly: AssemblyConfiguration("2.0")>
+<assembly: AssemblyConfiguration("0.2.5")>
 <assembly: AssemblyCompany("Game Associated Programming")>
 <assembly: AssemblyProduct("Money Tracker")>
 <assembly: AssemblyCopyright("Copyright Game Associated Programming 2012")>
@@ -28,4 +28,4 @@ Imports System.Runtime.InteropServices
 ' You can specify all values by your own or you can build default build and revision
 ' numbers with the '*' character (the default):
 
-<assembly: AssemblyVersion("0.2.*")>
+<assembly: AssemblyVersion("0.2.5.*")>

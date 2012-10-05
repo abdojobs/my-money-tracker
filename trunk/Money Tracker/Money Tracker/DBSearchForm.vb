@@ -20,9 +20,9 @@ Public Partial Class DBSearchForm
 		
 		' Fix the date time thing
 		datePickerStart.Format = DateTimePickerFormat.Custom
-		datePickerStart.CustomFormat = "dd/MM/yyyy" 
+		datePickerStart.CustomFormat = "yyyy-MM-dd" 
 		datePickerEnd.Format = DateTimePickerFormat.Custom
-		datePickerEnd.CustomFormat = "dd/MM/yyyy" 
+		datePickerEnd.CustomFormat = "yyyy-MM-dd" 
 		
 		' Set the end date to today
 		datePickerEnd.Value = Date.Today
@@ -161,7 +161,7 @@ Public Partial Class DBSearchForm
 		
 		' Now we need to create the 2 parts for this statement
 		' First we will get all the variables the individual wants to see
-		Dim selectWhat As String = "name,out,"
+		Dim selectWhat As String = "name,value,"
 		
 		For Each var In checkedListBoxVars.CheckedItems
 			
@@ -187,7 +187,7 @@ Public Partial Class DBSearchForm
 		
 		' Check the category box
 		If textBoxCategory.Text.Length > 0 Then
-			Dim id As String = g_sql.Sql.SearchForItem("id", g_sql.CatTableName, String.Format("name=>{0}", textBoxCategory.Text), True)
+			Dim id As String = g_sql.Sql.SearchForItem("id", g_sql.CatTableName, String.Format("categoryname=>{0}", textBoxCategory.Text), True)
 			selectWhere += "categories" + TypeOfSearch(id)
 		End If
 		
@@ -197,14 +197,38 @@ Public Partial Class DBSearchForm
 			selectWhere += "AND "
 		End If
 		
+		Dim startdate As Date = New Date("dd/MM/YYYY")
+		Dim enddate As Date = New Date("dd/MM/YYYY")
+		
+		If datePickerEnd.Enabled And labelDateEnd.Enabled Then
+			
+			' Need to figure out the start date of the month selected and the end date
+			startdate = DateSerial(datePickerStart.Value.Year,datePickerStart.Value.Month, datePickerStart.Value.Day)
+			enddate = DateSerial(datePickerEnd.Value.Year,datePickerEnd.Value.Month, datePickerEnd.Value.Day)
+			
+		Else
+			
+			' Need to figure out the start date of the month selected and the end date
+			startdate = DateSerial(datePickerStart.Value.Year,datePickerStart.Value.Month, 1)
+			enddate = DateSerial(datePickerStart.Value.Year,datePickerStart.Value.Month + 1, 0)
+			
+		End If
+		
+		Dim a = startdate.ToShortDateString
+	
+		' Set the format
+		Dim first As String = String.Format("{0}/{1}/{2}", startdate.Day, startdate.Month, startdate.Year)
+		Dim last As String = String.Format("{0}/{1}/{2}", enddate.Day, enddate.Month, enddate.Year)
+		
 		' Now we know for sure that we will ALWAYS have dates
-		selectWhere += String.Format("date BETWEEN '{0}' AND '{1}'", GetDate(datePickerStart), GetDate(datePickerEnd))
+		selectWhere += String.Format("dates BETWEEN '{0}' AND '{1}'", first, last)
 		
 		' Now we combine them
 		sqlStatement = String.Format(sqlStatement, selectWhat, g_sql.TableName, selectWhere)
 		
-		' Now that is done we call the sql and bind the results to the table
-		Dim bs As BindingSource = g_sql.Sql.BindingDatabase(sqlStatement)
+		' Now that is done we call the sql and bind the results to the tableDim bs As BindingSource
+		Dim bs As New BindingSource
+		g_sql.Sql.BindingDatabase(sqlStatement, bs)
 		dataGridView.DataSource = bs
 		
 	End Sub
@@ -218,7 +242,7 @@ Public Partial Class DBSearchForm
 			If e.ColumnIndex >= 0 Then
 				
 				' Check to make sure its the money column
-				If dataGridView.Columns(e.ColumnIndex).Name = "out" Then
+				If dataGridView.Columns(e.ColumnIndex).Name = "value" Then
 					
 					dataGridView.ClearSelection()
 			
@@ -248,6 +272,36 @@ Public Partial Class DBSearchForm
 		
 	End Sub
 	
+	Sub ButtonMonthlyOrRangeClick(sender As Object, e As EventArgs)
+		
+		If buttonMonthlyOrRange.Text = "Date Range" Then
+			
+			' Change the button
+			buttonMonthlyOrRange.Text = "Monthly"
+			labelDateStart.Text = "Start"
+			
+			' Show the End stuff
+			labelDateEnd.Visible = True
+			labelDateEnd.Enabled = True
+			datePickerEnd.Visible = True
+			datePickerEnd.Enabled = True
+			
+		Else
+			
+			' Change the button
+			buttonMonthlyOrRange.Text = "Date Range"
+			labelDateStart.Text = "Month"
+			
+			' Hide the End stuff
+			labelDateEnd.Visible = False
+			labelDateEnd.Enabled = False
+			datePickerEnd.Visible = False
+			datePickerEnd.Enabled = False
+			
+		End If
+		
+	End Sub
+	
 	Private Function TypeOfSearch(ByVal str As String) As String
 		
 		if radioButtonLike.Checked Then
@@ -268,16 +322,10 @@ Public Partial Class DBSearchForm
 		
 	End Function
 	
-	Private Function GetDate(ByVal dtp As DateTimePicker) As String
-		
-		Return String.Format("{0}/{1}/{2}", dtp.Value.Day.ToString, dtp.Value.Month.ToString, dtp.Value.Year.ToString)
-		
-	End Function
-	
 	Private Sub Tally
 		
 		Dim total As Double = 0.0
-		Dim id As Integer = dataGridView.Columns("out").Index
+		Dim id As Integer = dataGridView.Columns("value").Index
 		
 		For Each row As DataGridViewTextBoxCell In dataGridView.SelectedCells
 			

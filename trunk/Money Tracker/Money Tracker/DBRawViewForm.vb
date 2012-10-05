@@ -12,6 +12,8 @@ Imports MyInterface.SQLite
 
 Public Partial Class DBRawViewForm
 	
+	Private tracker As Integer
+	
 	Public Sub New()
 		
 		' Private variables
@@ -19,7 +21,20 @@ Public Partial Class DBRawViewForm
 		Me.InitializeComponent()
 		
 		' Create the data connection
-		Dim bs As BindingSource = g_sql.Sql.BindingDatabase(String.Format("SELECT * FROM {0}", g_sql.TableName))
+		Dim bs As New BindingSource
+		tracker = g_sql.Sql.BindingDatabase(String.Format("SELECT * FROM {0}", g_sql.TableName), bs)
+		dataGridView.DataSource = bs
+		
+	End Sub
+	
+	Public Sub Reset()
+		
+		' Get rid of data in the data grid view
+		dataGridView.DataSource = Nothing
+		
+		' Create the data connection
+		Dim bs As New BindingSource
+		g_sql.Sql.BindingDatabase(String.Format("SELECT * FROM {0}", g_sql.TableName), bs, tracker)
 		dataGridView.DataSource = bs
 		
 	End Sub

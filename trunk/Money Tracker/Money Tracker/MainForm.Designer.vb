@@ -41,6 +41,7 @@ Partial Class MainForm
 		Me.viewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.rawDataToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.searchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+		Me.excelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.menuStripMainForm.SuspendLayout
 		Me.SuspendLayout
 		'
@@ -75,7 +76,7 @@ Partial Class MainForm
 		'
 		'viewToolStripMenuItem
 		'
-		Me.viewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.rawDataToolStripMenuItem, Me.searchToolStripMenuItem})
+		Me.viewToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.rawDataToolStripMenuItem, Me.searchToolStripMenuItem, Me.excelToolStripMenuItem})
 		Me.viewToolStripMenuItem.Name = "viewToolStripMenuItem"
 		Me.viewToolStripMenuItem.Size = New System.Drawing.Size(41, 20)
 		Me.viewToolStripMenuItem.Text = "View"
@@ -83,16 +84,23 @@ Partial Class MainForm
 		'rawDataToolStripMenuItem
 		'
 		Me.rawDataToolStripMenuItem.Name = "rawDataToolStripMenuItem"
-		Me.rawDataToolStripMenuItem.Size = New System.Drawing.Size(121, 22)
+		Me.rawDataToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.rawDataToolStripMenuItem.Text = "Raw Data"
 		AddHandler Me.rawDataToolStripMenuItem.Click, AddressOf Me.RawDataToolStripMenuItemClick
 		'
 		'searchToolStripMenuItem
 		'
 		Me.searchToolStripMenuItem.Name = "searchToolStripMenuItem"
-		Me.searchToolStripMenuItem.Size = New System.Drawing.Size(121, 22)
+		Me.searchToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
 		Me.searchToolStripMenuItem.Text = "Search"
 		AddHandler Me.searchToolStripMenuItem.Click, AddressOf Me.SearchToolStripMenuItemClick
+		'
+		'excelToolStripMenuItem
+		'
+		Me.excelToolStripMenuItem.Name = "excelToolStripMenuItem"
+		Me.excelToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+		Me.excelToolStripMenuItem.Text = "Excel"
+		AddHandler Me.excelToolStripMenuItem.Click, AddressOf Me.ExcelToolStripMenuItemClick
 		'
 		'MainForm
 		'
@@ -111,6 +119,7 @@ Partial Class MainForm
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private excelToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private searchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private rawDataToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Private viewToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

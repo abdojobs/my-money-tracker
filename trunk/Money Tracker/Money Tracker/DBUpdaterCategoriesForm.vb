@@ -21,8 +21,7 @@ Public Partial Class DBUpdaterCategoriesForm
 		m_result = Nothing
 		
 		' Create the data connection
-		Dim bs As BindingSource = g_sql.Sql.BindingDatabase(String.Format("SELECT name FROM {0}", g_sql.CatTableName))
-		dataGridView.DataSource = bs
+		dataGridView.DataSource = g_sql.Sql.GetDataTable(String.Format("SELECT categoryname FROM {0}", g_sql.CatTableName))
 		
 		' Sort them
 		dataGridView.Sort(dataGridView.Columns(0), System.ComponentModel.ListSortDirection.Ascending)

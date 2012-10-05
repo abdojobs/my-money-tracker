@@ -16,6 +16,9 @@ Public Partial Class DBUpdaterInfoControl
 	' A timer for the dropbox
 	Private lastClickTimer As DateTime
 	
+	' Datasource tracker
+	Private tracker As Integer
+	
     Public Sub New()
     	
     	Me.InitializeComponent()
@@ -24,28 +27,31 @@ Public Partial Class DBUpdaterInfoControl
 		lastClickTimer = DateTime.Now
 		
 		' Create the data connection
-		Dim bs As BindingSource = g_sql.Sql.BindingDatabase(String.Format("SELECT * FROM {0} WHERE categories IS NULL", g_sql.TableName))
+		Dim bs As New BindingSource
+		tracker = g_sql.Sql.BindingDatabase(String.Format("SELECT * FROM {0} WHERE categories IS NULL OR comment IS NULL", g_sql.TableName), bs)
 		bindingNavigator.BindingSource = bs
 		
 		' Bind the CompanyName field to the TextBox control.
 		textBoxID.DataBindings.Add(New Binding("Text", bs, "id", True))
 		textBoxCategories.DataBindings.Add(New Binding("Text", bs, "categories", True))
-		textBoxTransaction.DataBindings.Add(New Binding("Text", bs, "name", True))
-		textBoxBank.DataBindings.Add(New Binding("Text", bs, "bank", True))
-		textBoxDate.DataBindings.Add(New Binding("Text", bs, "date", True))
-		textBoxOut.DataBindings.Add(New Binding("Text", bs, "out", True))
+		'textBoxSubCategory.DataBindings.Add(New Binding("Text", bs, "subcategories", True))
 		richTextBoxNote.DataBindings.Add(New Binding("Text", bs, "comment", True))
 		
+		textBoxTransaction.DataBindings.Add(New Binding("Text", bs, "name", True))
+		textBoxBank.DataBindings.Add(New Binding("Text", bs, "bank", True))
+		textBoxDate.DataBindings.Add(New Binding("Text", bs, "dates", True))
+		textBoxValue.DataBindings.Add(New Binding("Text", bs, "value", True))
+		
 		' Setup the updates
-		Dim params(3) As SQLiteParameter
+		Dim params(2) As SQLiteParameter
 		params(0) = New SQLiteParameter("@id", DbType.Int32, 0, "id")
   		params(1) = New SQLiteParameter("@comment", DbType.String, 1000, "comment")
   		params(2) = New SQLiteParameter("@cat", DbType.String, 10, "categories")
-  		g_sql.Sql.SetupBoundUpdate("UPDATE " + g_sql.TableName + " SET comment=@comment, categories=@cat WHERE id=@id", params)
-  		g_sql.Sql.SetupBoundDelete("DELETE FROM " + g_sql.TableName + " WHERE id=@id", params)
+  		g_sql.Sql.SetupBoundUpdate(tracker, "UPDATE OR REPLACE " + g_sql.TableName + " SET comment=@comment, categories=@cat WHERE id=@id", params)
+  		g_sql.Sql.SetupBoundDelete(tracker, "DELETE FROM " + g_sql.TableName + " WHERE id=@id", params)
   		
   		' We have a category
-		Dim names As DataTable = g_sql.Sql.GetDataTable("SELECT name FROM " + g_sql.CatTableName)
+		Dim names As DataTable = g_sql.Sql.GetDataTable("SELECT categoryname FROM " + g_sql.CatTableName)
 		
 		' loop and put in the names
 		For Each name As DataRow In names.Rows
@@ -59,14 +65,14 @@ Public Partial Class DBUpdaterInfoControl
 	Sub ForwardClick(sender As Object, e As EventArgs)
 		
 		' Update the table
-		g_sql.Sql.BoundTableCallUpdate()
+		g_sql.Sql.BoundTableCallUpdate(tracker)
 		
 	End Sub
 	
 	Sub ForwardDeleteClick(sender As Object, e As EventArgs)
 		
 		' Delete from the database
-		g_sql.Sql.BoundTableCallUpdate()
+		g_sql.Sql.BoundTableCallUpdate(tracker)
 		
 	End Sub
 	
@@ -99,7 +105,7 @@ Public Partial Class DBUpdaterInfoControl
 		If textBoxCategories.Text.Length > 0 Then
 		
 			' This is done every time we click, mostly worried about the first one but not all that worried
-			Dim category As String = g_sql.Sql.SearchForItem("name", g_sql.CatTableName, String.Format("id=>{0}", textBoxCategories.Text))
+			Dim category As String = g_sql.Sql.SearchForItem("categoryname", g_sql.CatTableName, String.Format("id=>{0}", textBoxCategories.Text))
 			
 			' Now set the category drop box
 			dropBoxCategory.SelectedIndex = dropBoxCategory.Items.IndexOf(category)
@@ -123,8 +129,16 @@ Public Partial Class DBUpdaterInfoControl
 			' Check to see something was entered
 			If name.Length > 0 Then
 				
+				' Check to see if fist character is a letter and NOT an number
+				If IsNumeric(name(0)) Then
+					
+					MessageBox.Show("Please do not use a number at the start of your Category!", "Using a number?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+					Exit Sub
+					
+				End If
+				
 				' Check it against the DB
-				Dim test As String = g_sql.Sql.SearchForItem("name", g_sql.CatTableName, String.Format("name=>{0}", name), True)
+				Dim test As String = g_sql.Sql.SearchForItem("categoryname", g_sql.CatTableName, String.Format("categoryname=>{0}", name), True)
 				
 				If String.Compare(test, name) = -1 Then
 					
@@ -133,7 +147,7 @@ Public Partial Class DBUpdaterInfoControl
 					dropBoxCategory.SelectedIndex = dropBoxCategory.Items.IndexOf(name)
 					
 					' Insert into DB
-					If g_sql.Sql.Insert(g_sql.CatTableName, String.Format("name=>{0}", name)) Then
+					If g_sql.Sql.Insert(g_sql.CatTableName, String.Format("categoryname=>{0}", name)) Then
 						textBoxCategories.Text = g_sql.Sql.LastInsertID(g_sql.CatTableName).ToString
 					End If
 					
@@ -158,13 +172,13 @@ Public Partial Class DBUpdaterInfoControl
 			If name.Length > 0 Then
 				
 				' Check to see if the new name is already in the db
-				Dim test As String = g_sql.Sql.SearchForItem("name", g_sql.CatTableName, String.Format("name=>{0}", name), True)
+				Dim test As String = g_sql.Sql.SearchForItem("categoryname", g_sql.CatTableName, String.Format("categoryname=>{0}", name), True)
 				
 				' If its there we do not want to update things again
 				If String.Compare(test, name) = 0  Then
 					
 					' So we will delete the one we were changing
-					Dim index As Integer = CInt(g_sql.Sql.SearchForItem("id", g_sql.CatTableName, String.Format("name=>{0}", oldcategory), True))
+					Dim index As Integer = CInt(g_sql.Sql.SearchForItem("id", g_sql.CatTableName, String.Format("categoryname=>{0}", oldcategory), True))
 				
 					' Delete it from the sql
 					g_sql.Sql.Delete(g_sql.CatTableName, String.Format("id={0}", index))
@@ -181,7 +195,7 @@ Public Partial Class DBUpdaterInfoControl
 				Else
 					
 					' Fix it in the DB
-					g_sql.Sql.Update(g_sql.CatTableName, String.Format("name={0}", name), String.Format("name={0}", oldcategory))
+					g_sql.Sql.Update(g_sql.CatTableName, String.Format("categoryname={0}", name), String.Format("categoryname={0}", oldcategory))
 					
 					' Now update the drop box
 					Dim index As Integer = dropBoxCategory.Items.IndexOf(oldcategory)
@@ -195,7 +209,7 @@ Public Partial Class DBUpdaterInfoControl
 '			Else
 '				
 '				' Find the index in the sql for this item
-'				Dim index As Integer = CInt(g_sql.SqlSearchForItem("id", g_sql.CatTableName, String.Format("name=>{0}", oldcategory), True))
+'				Dim index As Integer = CInt(g_sql.SqlSearchForItem("id", g_sql.CatTableName, String.Format("categoryname=>{0}", oldcategory), True))
 '				
 '				' Delete it from the sql
 '				g_sql.SqlDelete(g_sql.CatTableName, String.Format("id={0}", index))
@@ -228,7 +242,7 @@ Public Partial Class DBUpdaterInfoControl
 		Dim category As String = dropBoxCategory.SelectedItem.ToString
 		
 		' Now find this one in the database
-		Dim index As String = g_sql.Sql.SearchForItem("id", g_sql.CatTableName, String.Format("name=>{0}", category), True)
+		Dim index As String = g_sql.Sql.SearchForItem("id", g_sql.CatTableName, String.Format("categoryname=>{0}", category), True)
 		
 		' Now that we have it we must set the category text box
 		textBoxCategories.Text = index
