@@ -38,7 +38,7 @@ Partial Class CSVLoader
 		Me.checkBoxDelete = New System.Windows.Forms.CheckBox()
 		Me.checkBoxMarked = New System.Windows.Forms.CheckBox()
 		Me.openFileDialog = New System.Windows.Forms.OpenFileDialog()
-		Me.comboBoxBankType = New System.Windows.Forms.ComboBox()
+		Me.checkBoxReset = New System.Windows.Forms.CheckBox()
 		Me.SuspendLayout
 		'
 		'buttonSelect
@@ -70,17 +70,17 @@ Partial Class CSVLoader
 		'buttonLoad
 		'
 		Me.buttonLoad.Enabled = false
-		Me.buttonLoad.Location = New System.Drawing.Point(316, 62)
+		Me.buttonLoad.Location = New System.Drawing.Point(280, 62)
 		Me.buttonLoad.Name = "buttonLoad"
 		Me.buttonLoad.Size = New System.Drawing.Size(71, 20)
-		Me.buttonLoad.TabIndex = 4
+		Me.buttonLoad.TabIndex = 5
 		Me.buttonLoad.Text = "Load"
 		Me.buttonLoad.UseVisualStyleBackColor = true
 		AddHandler Me.buttonLoad.Click, AddressOf Me.ButtonLoadClick
 		'
 		'checkBoxDelete
 		'
-		Me.checkBoxDelete.Location = New System.Drawing.Point(223, 63)
+		Me.checkBoxDelete.Location = New System.Drawing.Point(105, 63)
 		Me.checkBoxDelete.Name = "checkBoxDelete"
 		Me.checkBoxDelete.Size = New System.Drawing.Size(86, 20)
 		Me.checkBoxDelete.TabIndex = 3
@@ -92,7 +92,7 @@ Partial Class CSVLoader
 		'
 		Me.checkBoxMarked.Checked = true
 		Me.checkBoxMarked.CheckState = System.Windows.Forms.CheckState.Checked
-		Me.checkBoxMarked.Location = New System.Drawing.Point(131, 63)
+		Me.checkBoxMarked.Location = New System.Drawing.Point(13, 63)
 		Me.checkBoxMarked.Name = "checkBoxMarked"
 		Me.checkBoxMarked.Size = New System.Drawing.Size(86, 20)
 		Me.checkBoxMarked.TabIndex = 2
@@ -103,23 +103,23 @@ Partial Class CSVLoader
 		'openFileDialog
 		'
 		Me.openFileDialog.DefaultExt = "csv"
-		Me.openFileDialog.FileName = "openFileDialog"
-		Me.openFileDialog.Filter = "CSV|*.csv"
+		Me.openFileDialog.Filter = "CSV|*.csv|*.*|*.*"
 		Me.openFileDialog.Title = "Please Select a CSV File"
 		'
-		'comboBoxBankType
+		'checkBoxReset
 		'
-		Me.comboBoxBankType.FormattingEnabled = true
-		Me.comboBoxBankType.Location = New System.Drawing.Point(13, 63)
-		Me.comboBoxBankType.Name = "comboBoxBankType"
-		Me.comboBoxBankType.Size = New System.Drawing.Size(94, 21)
-		Me.comboBoxBankType.TabIndex = 6
+		Me.checkBoxReset.Location = New System.Drawing.Point(197, 62)
+		Me.checkBoxReset.Name = "checkBoxReset"
+		Me.checkBoxReset.Size = New System.Drawing.Size(67, 20)
+		Me.checkBoxReset.TabIndex = 4
+		Me.checkBoxReset.Text = "Reset"
+		Me.checkBoxReset.UseVisualStyleBackColor = true
 		'
 		'CSVLoader
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.Controls.Add(Me.comboBoxBankType)
+		Me.Controls.Add(Me.checkBoxReset)
 		Me.Controls.Add(Me.checkBoxMarked)
 		Me.Controls.Add(Me.checkBoxDelete)
 		Me.Controls.Add(Me.buttonLoad)
@@ -127,11 +127,11 @@ Partial Class CSVLoader
 		Me.Controls.Add(Me.label1)
 		Me.Controls.Add(Me.buttonSelect)
 		Me.Name = "CSVLoader"
-		Me.Size = New System.Drawing.Size(396, 103)
+		Me.Size = New System.Drawing.Size(396, 96)
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
-	Private comboBoxBankType As System.Windows.Forms.ComboBox
+	Private checkBoxReset As System.Windows.Forms.CheckBox
 	Private WithEvents openFileDialog As System.Windows.Forms.OpenFileDialog
 	Private checkBoxMarked As System.Windows.Forms.CheckBox
 	Private checkBoxDelete As System.Windows.Forms.CheckBox

@@ -44,10 +44,6 @@ Partial Class DBSearchForm
 		Me.textBoxCategory = New System.Windows.Forms.TextBox()
 		Me.buttonClear = New System.Windows.Forms.Button()
 		Me.buttonSearch = New System.Windows.Forms.Button()
-		Me.datePickerStart = New System.Windows.Forms.DateTimePicker()
-		Me.label5 = New System.Windows.Forms.Label()
-		Me.datePickerEnd = New System.Windows.Forms.DateTimePicker()
-		Me.label6 = New System.Windows.Forms.Label()
 		Me.groupBox3 = New System.Windows.Forms.GroupBox()
 		Me.radioButtonLike = New System.Windows.Forms.RadioButton()
 		Me.radioButtonExact = New System.Windows.Forms.RadioButton()
@@ -59,6 +55,11 @@ Partial Class DBSearchForm
 		Me.groupBox6 = New System.Windows.Forms.GroupBox()
 		Me.textBoxTotal = New System.Windows.Forms.TextBox()
 		Me.groupBox1 = New System.Windows.Forms.GroupBox()
+		Me.buttonMonthlyOrRange = New System.Windows.Forms.Button()
+		Me.labelDateEnd = New System.Windows.Forms.Label()
+		Me.datePickerEnd = New System.Windows.Forms.DateTimePicker()
+		Me.labelDateStart = New System.Windows.Forms.Label()
+		Me.datePickerStart = New System.Windows.Forms.DateTimePicker()
 		Me.groupBox2.SuspendLayout
 		CType(Me.dataGridView,System.ComponentModel.ISupportInitialize).BeginInit
 		Me.groupBox3.SuspendLayout
@@ -73,9 +74,9 @@ Partial Class DBSearchForm
 		Me.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
 		Me.groupBox2.Controls.Add(Me.dataGridView)
 		Me.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.groupBox2.Location = New System.Drawing.Point(0, 170)
+		Me.groupBox2.Location = New System.Drawing.Point(0, 189)
 		Me.groupBox2.Name = "groupBox2"
-		Me.groupBox2.Size = New System.Drawing.Size(502, 367)
+		Me.groupBox2.Size = New System.Drawing.Size(502, 348)
 		Me.groupBox2.TabIndex = 1
 		Me.groupBox2.TabStop = false
 		Me.groupBox2.Text = "Output"
@@ -90,7 +91,7 @@ Partial Class DBSearchForm
 		Me.dataGridView.Location = New System.Drawing.Point(3, 16)
 		Me.dataGridView.Name = "dataGridView"
 		Me.dataGridView.ReadOnly = true
-		Me.dataGridView.Size = New System.Drawing.Size(496, 348)
+		Me.dataGridView.Size = New System.Drawing.Size(496, 329)
 		Me.dataGridView.TabIndex = 12
 		AddHandler Me.dataGridView.CellMouseClick, AddressOf Me.DataGridViewCellMouseClick
 		AddHandler Me.dataGridView.CellMouseUp, AddressOf Me.DataGridViewCellMouseClick
@@ -164,44 +165,6 @@ Partial Class DBSearchForm
 		Me.buttonSearch.Text = "Search"
 		Me.buttonSearch.UseVisualStyleBackColor = true
 		AddHandler Me.buttonSearch.Click, AddressOf Me.ButtonSearchClick
-		'
-		'datePickerStart
-		'
-		Me.datePickerStart.CustomFormat = ""
-		Me.datePickerStart.Location = New System.Drawing.Point(78, 99)
-		Me.datePickerStart.Name = "datePickerStart"
-		Me.datePickerStart.Size = New System.Drawing.Size(154, 20)
-		Me.datePickerStart.TabIndex = 4
-		Me.datePickerStart.Value = New Date(2012, 1, 1, 0, 0, 0, 0)
-		AddHandler Me.datePickerStart.ValueChanged, AddressOf Me.DatePickerStartValueChanged
-		'
-		'label5
-		'
-		Me.label5.Location = New System.Drawing.Point(21, 98)
-		Me.label5.Name = "label5"
-		Me.label5.Size = New System.Drawing.Size(51, 20)
-		Me.label5.TabIndex = 11
-		Me.label5.Text = "Start"
-		Me.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		'
-		'datePickerEnd
-		'
-		Me.datePickerEnd.CustomFormat = ""
-		Me.datePickerEnd.Location = New System.Drawing.Point(78, 128)
-		Me.datePickerEnd.Name = "datePickerEnd"
-		Me.datePickerEnd.Size = New System.Drawing.Size(154, 20)
-		Me.datePickerEnd.TabIndex = 5
-		Me.datePickerEnd.Value = New Date(2012, 8, 29, 0, 0, 0, 0)
-		AddHandler Me.datePickerEnd.ValueChanged, AddressOf Me.DatePickerEndValueChanged
-		'
-		'label6
-		'
-		Me.label6.Location = New System.Drawing.Point(21, 127)
-		Me.label6.Name = "label6"
-		Me.label6.Size = New System.Drawing.Size(51, 20)
-		Me.label6.TabIndex = 13
-		Me.label6.Text = "End"
-		Me.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		'
 		'groupBox3
 		'
@@ -290,7 +253,7 @@ Partial Class DBSearchForm
 		Me.checkedListBoxVars.BackColor = System.Drawing.SystemColors.Control
 		Me.checkedListBoxVars.CheckOnClick = true
 		Me.checkedListBoxVars.FormattingEnabled = true
-		Me.checkedListBoxVars.Items.AddRange(New Object() {"Bank", "Date", "Comment", "Categories"})
+		Me.checkedListBoxVars.Items.AddRange(New Object() {"Bank", "Dates", "Comment", "Categories"})
 		Me.checkedListBoxVars.Location = New System.Drawing.Point(6, 19)
 		Me.checkedListBoxVars.Name = "checkedListBoxVars"
 		Me.checkedListBoxVars.Size = New System.Drawing.Size(142, 64)
@@ -318,14 +281,15 @@ Partial Class DBSearchForm
 		'groupBox1
 		'
 		Me.groupBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+		Me.groupBox1.Controls.Add(Me.labelDateEnd)
+		Me.groupBox1.Controls.Add(Me.datePickerEnd)
+		Me.groupBox1.Controls.Add(Me.labelDateStart)
+		Me.groupBox1.Controls.Add(Me.datePickerStart)
+		Me.groupBox1.Controls.Add(Me.buttonMonthlyOrRange)
 		Me.groupBox1.Controls.Add(Me.groupBox6)
 		Me.groupBox1.Controls.Add(Me.groupBox5)
 		Me.groupBox1.Controls.Add(Me.groupBox4)
 		Me.groupBox1.Controls.Add(Me.groupBox3)
-		Me.groupBox1.Controls.Add(Me.label6)
-		Me.groupBox1.Controls.Add(Me.datePickerEnd)
-		Me.groupBox1.Controls.Add(Me.label5)
-		Me.groupBox1.Controls.Add(Me.datePickerStart)
 		Me.groupBox1.Controls.Add(Me.buttonSearch)
 		Me.groupBox1.Controls.Add(Me.buttonClear)
 		Me.groupBox1.Controls.Add(Me.textBoxCategory)
@@ -337,10 +301,56 @@ Partial Class DBSearchForm
 		Me.groupBox1.Dock = System.Windows.Forms.DockStyle.Top
 		Me.groupBox1.Location = New System.Drawing.Point(0, 0)
 		Me.groupBox1.Name = "groupBox1"
-		Me.groupBox1.Size = New System.Drawing.Size(502, 170)
+		Me.groupBox1.Size = New System.Drawing.Size(502, 189)
 		Me.groupBox1.TabIndex = 0
 		Me.groupBox1.TabStop = false
 		Me.groupBox1.Text = "Search Criteria"
+		'
+		'buttonMonthlyOrRange
+		'
+		Me.buttonMonthlyOrRange.Location = New System.Drawing.Point(78, 96)
+		Me.buttonMonthlyOrRange.Name = "buttonMonthlyOrRange"
+		Me.buttonMonthlyOrRange.Size = New System.Drawing.Size(154, 23)
+		Me.buttonMonthlyOrRange.TabIndex = 26
+		Me.buttonMonthlyOrRange.Text = "Monthly"
+		Me.buttonMonthlyOrRange.UseVisualStyleBackColor = true
+		AddHandler Me.buttonMonthlyOrRange.Click, AddressOf Me.ButtonMonthlyOrRangeClick
+		'
+		'labelDateEnd
+		'
+		Me.labelDateEnd.Location = New System.Drawing.Point(36, 151)
+		Me.labelDateEnd.Name = "labelDateEnd"
+		Me.labelDateEnd.Size = New System.Drawing.Size(36, 20)
+		Me.labelDateEnd.TabIndex = 37
+		Me.labelDateEnd.Text = "End"
+		Me.labelDateEnd.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'datePickerEnd
+		'
+		Me.datePickerEnd.CustomFormat = ""
+		Me.datePickerEnd.Location = New System.Drawing.Point(78, 152)
+		Me.datePickerEnd.Name = "datePickerEnd"
+		Me.datePickerEnd.Size = New System.Drawing.Size(154, 20)
+		Me.datePickerEnd.TabIndex = 35
+		Me.datePickerEnd.Value = New Date(2012, 8, 29, 0, 0, 0, 0)
+		'
+		'labelDateStart
+		'
+		Me.labelDateStart.Location = New System.Drawing.Point(21, 122)
+		Me.labelDateStart.Name = "labelDateStart"
+		Me.labelDateStart.Size = New System.Drawing.Size(51, 20)
+		Me.labelDateStart.TabIndex = 36
+		Me.labelDateStart.Text = "Start"
+		Me.labelDateStart.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'datePickerStart
+		'
+		Me.datePickerStart.CustomFormat = ""
+		Me.datePickerStart.Location = New System.Drawing.Point(78, 123)
+		Me.datePickerStart.Name = "datePickerStart"
+		Me.datePickerStart.Size = New System.Drawing.Size(154, 20)
+		Me.datePickerStart.TabIndex = 34
+		Me.datePickerStart.Value = New Date(2012, 1, 1, 0, 0, 0, 0)
 		'
 		'DBSearchForm
 		'
@@ -364,6 +374,9 @@ Partial Class DBSearchForm
 		Me.groupBox1.PerformLayout
 		Me.ResumeLayout(false)
 	End Sub
+	Private labelDateEnd As System.Windows.Forms.Label
+	Private datePickerEnd As System.Windows.Forms.DateTimePicker
+	Private buttonMonthlyOrRange As System.Windows.Forms.Button
 	Private groupBox6 As System.Windows.Forms.GroupBox
 	Private radioButtonAnd As System.Windows.Forms.RadioButton
 	Private radioButtonOr As System.Windows.Forms.RadioButton
@@ -377,9 +390,7 @@ Partial Class DBSearchForm
 	Private dataGridView As System.Windows.Forms.DataGridView
 	Private groupBox2 As System.Windows.Forms.GroupBox
 	Private datePickerStart As System.Windows.Forms.DateTimePicker
-	Private label5 As System.Windows.Forms.Label
-	Private datePickerEnd As System.Windows.Forms.DateTimePicker
-	Private label6 As System.Windows.Forms.Label
+	Private labelDateStart As System.Windows.Forms.Label
 	Private label3 As System.Windows.Forms.Label
 	Private textBoxBank As System.Windows.Forms.TextBox
 	Private label4 As System.Windows.Forms.Label

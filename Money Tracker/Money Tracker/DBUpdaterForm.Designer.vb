@@ -34,22 +34,22 @@ Partial Class DBUpdaterForm
 	''' </summary>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
-		Me.dbUpdaterInfoControl2 = New MoneyTracker.DBUpdaterInfoControl()
+		Me.dbUpdaterInfoControl = New MoneyTracker.DBUpdaterInfoControl()
 		Me.SuspendLayout
 		'
 		'dbUpdaterInfoControl2
 		'
-		Me.dbUpdaterInfoControl2.Location = New System.Drawing.Point(6, 12)
-		Me.dbUpdaterInfoControl2.Name = "dbUpdaterInfoControl2"
-		Me.dbUpdaterInfoControl2.Size = New System.Drawing.Size(487, 299)
-		Me.dbUpdaterInfoControl2.TabIndex = 0
+		Me.dbUpdaterInfoControl.Location = New System.Drawing.Point(6, 12)
+		Me.dbUpdaterInfoControl.Name = "dbUpdaterInfoControl2"
+		Me.dbUpdaterInfoControl.Size = New System.Drawing.Size(487, 299)
+		Me.dbUpdaterInfoControl.TabIndex = 0
 		'
 		'DBUpdaterForm
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.ClientSize = New System.Drawing.Size(500, 314)
-		Me.Controls.Add(Me.dbUpdaterInfoControl2)
+		Me.Controls.Add(Me.dbUpdaterInfoControl)
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
 		Me.MaximizeBox = false
 		Me.MinimizeBox = false
@@ -60,6 +60,5 @@ Partial Class DBUpdaterForm
 		Me.TopMost = true
 		Me.ResumeLayout(false)
 	End Sub
-	Private dbUpdaterInfoControl2 As MoneyTracker.DBUpdaterInfoControl
-	Private dbUpdaterInfoControl1 As MoneyTracker.DBUpdaterInfoControl
+	Private dbUpdaterInfoControl As MoneyTracker.DBUpdaterInfoControl
 End Class

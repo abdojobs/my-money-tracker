@@ -9,6 +9,15 @@
 
 Public Module Globals
 	
-	Public g_sql As New SQLiteDBInterfaceClass
+	' Global for the config file (must be before the SQLiteDBInterfaceClass)
+	Public g_config As XMLConfig
+	
+	' Global for the sql database stuff
+	Public g_sql As SQLiteDBInterfaceClass
+	
+	Public Sub Initialize()
+		g_config = New XMLConfig
+		g_sql = New SQLiteDBInterfaceClass
+	End Sub
 	
 End Module

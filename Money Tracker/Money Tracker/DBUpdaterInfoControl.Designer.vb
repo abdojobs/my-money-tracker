@@ -34,6 +34,8 @@ Partial Class DBUpdaterInfoControl
 		Me.components = New System.ComponentModel.Container()
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DBUpdaterInfoControl))
 		Me.groupBox1 = New System.Windows.Forms.GroupBox()
+		Me.textBoxRecieptNumber = New System.Windows.Forms.TextBox()
+		Me.checkBoxReciept = New System.Windows.Forms.CheckBox()
 		Me.buttonNotes = New System.Windows.Forms.Button()
 		Me.textBoxSubCategory = New System.Windows.Forms.TextBox()
 		Me.textBoxCategories = New System.Windows.Forms.TextBox()
@@ -44,7 +46,7 @@ Partial Class DBUpdaterInfoControl
 		Me.label7 = New System.Windows.Forms.Label()
 		Me.textBoxTransaction = New System.Windows.Forms.TextBox()
 		Me.label4 = New System.Windows.Forms.Label()
-		Me.textBoxOut = New System.Windows.Forms.TextBox()
+		Me.textBoxValue = New System.Windows.Forms.TextBox()
 		Me.label6 = New System.Windows.Forms.Label()
 		Me.textBoxDate = New System.Windows.Forms.TextBox()
 		Me.label3 = New System.Windows.Forms.Label()
@@ -75,6 +77,8 @@ Partial Class DBUpdaterInfoControl
 		'
 		'groupBox1
 		'
+		Me.groupBox1.Controls.Add(Me.textBoxRecieptNumber)
+		Me.groupBox1.Controls.Add(Me.checkBoxReciept)
 		Me.groupBox1.Controls.Add(Me.buttonNotes)
 		Me.groupBox1.Controls.Add(Me.textBoxSubCategory)
 		Me.groupBox1.Controls.Add(Me.textBoxCategories)
@@ -85,7 +89,7 @@ Partial Class DBUpdaterInfoControl
 		Me.groupBox1.Controls.Add(Me.label7)
 		Me.groupBox1.Controls.Add(Me.textBoxTransaction)
 		Me.groupBox1.Controls.Add(Me.label4)
-		Me.groupBox1.Controls.Add(Me.textBoxOut)
+		Me.groupBox1.Controls.Add(Me.textBoxValue)
 		Me.groupBox1.Controls.Add(Me.label6)
 		Me.groupBox1.Controls.Add(Me.textBoxDate)
 		Me.groupBox1.Controls.Add(Me.label3)
@@ -96,12 +100,30 @@ Partial Class DBUpdaterInfoControl
 		Me.groupBox1.TabStop = false
 		Me.groupBox1.Text = "Item Specifics"
 		'
+		'textBoxRecieptNumber
+		'
+		Me.textBoxRecieptNumber.Enabled = false
+		Me.textBoxRecieptNumber.Location = New System.Drawing.Point(181, 97)
+		Me.textBoxRecieptNumber.Name = "textBoxRecieptNumber"
+		Me.textBoxRecieptNumber.Size = New System.Drawing.Size(111, 20)
+		Me.textBoxRecieptNumber.TabIndex = 2
+		'
+		'checkBoxReciept
+		'
+		Me.checkBoxReciept.Enabled = false
+		Me.checkBoxReciept.Location = New System.Drawing.Point(181, 71)
+		Me.checkBoxReciept.Name = "checkBoxReciept"
+		Me.checkBoxReciept.Size = New System.Drawing.Size(104, 20)
+		Me.checkBoxReciept.TabIndex = 1
+		Me.checkBoxReciept.Text = "Have Reciept?"
+		Me.checkBoxReciept.UseVisualStyleBackColor = true
+		'
 		'buttonNotes
 		'
 		Me.buttonNotes.Location = New System.Drawing.Point(445, 123)
 		Me.buttonNotes.Name = "buttonNotes"
 		Me.buttonNotes.Size = New System.Drawing.Size(24, 21)
-		Me.buttonNotes.TabIndex = 25
+		Me.buttonNotes.TabIndex = 4
 		Me.buttonNotes.Text = "..."
 		Me.buttonNotes.TextAlign = System.Drawing.ContentAlignment.TopCenter
 		Me.buttonNotes.UseVisualStyleBackColor = true
@@ -113,7 +135,7 @@ Partial Class DBUpdaterInfoControl
 		Me.textBoxSubCategory.Location = New System.Drawing.Point(56, 157)
 		Me.textBoxSubCategory.Name = "textBoxSubCategory"
 		Me.textBoxSubCategory.Size = New System.Drawing.Size(20, 20)
-		Me.textBoxSubCategory.TabIndex = 24
+		Me.textBoxSubCategory.TabIndex = 0
 		Me.textBoxSubCategory.TabStop = false
 		'
 		'textBoxCategories
@@ -122,7 +144,7 @@ Partial Class DBUpdaterInfoControl
 		Me.textBoxCategories.Location = New System.Drawing.Point(30, 157)
 		Me.textBoxCategories.Name = "textBoxCategories"
 		Me.textBoxCategories.Size = New System.Drawing.Size(20, 20)
-		Me.textBoxCategories.TabIndex = 23
+		Me.textBoxCategories.TabIndex = 0
 		Me.textBoxCategories.TabStop = false
 		'
 		'textBoxID
@@ -141,7 +163,7 @@ Partial Class DBUpdaterInfoControl
 		Me.richTextBoxNote.MaxLength = 1000
 		Me.richTextBoxNote.Name = "richTextBoxNote"
 		Me.richTextBoxNote.Size = New System.Drawing.Size(353, 47)
-		Me.richTextBoxNote.TabIndex = 22
+		Me.richTextBoxNote.TabIndex = 3
 		Me.richTextBoxNote.Text = ""
 		'
 		'label8
@@ -160,7 +182,7 @@ Partial Class DBUpdaterInfoControl
 		Me.textBoxBank.Location = New System.Drawing.Point(86, 45)
 		Me.textBoxBank.Name = "textBoxBank"
 		Me.textBoxBank.Size = New System.Drawing.Size(389, 20)
-		Me.textBoxBank.TabIndex = 19
+		Me.textBoxBank.TabIndex = 0
 		Me.textBoxBank.TabStop = false
 		'
 		'label7
@@ -179,7 +201,7 @@ Partial Class DBUpdaterInfoControl
 		Me.textBoxTransaction.Location = New System.Drawing.Point(86, 19)
 		Me.textBoxTransaction.Name = "textBoxTransaction"
 		Me.textBoxTransaction.Size = New System.Drawing.Size(389, 20)
-		Me.textBoxTransaction.TabIndex = 17
+		Me.textBoxTransaction.TabIndex = 0
 		Me.textBoxTransaction.TabStop = false
 		'
 		'label4
@@ -192,14 +214,14 @@ Partial Class DBUpdaterInfoControl
 		Me.label4.Text = "Transaction"
 		Me.label4.TextAlign = System.Drawing.ContentAlignment.TopRight
 		'
-		'textBoxOut
+		'textBoxValue
 		'
-		Me.textBoxOut.Enabled = false
-		Me.textBoxOut.Location = New System.Drawing.Point(86, 97)
-		Me.textBoxOut.Name = "textBoxOut"
-		Me.textBoxOut.Size = New System.Drawing.Size(89, 20)
-		Me.textBoxOut.TabIndex = 0
-		Me.textBoxOut.TabStop = false
+		Me.textBoxValue.Enabled = false
+		Me.textBoxValue.Location = New System.Drawing.Point(86, 97)
+		Me.textBoxValue.Name = "textBoxValue"
+		Me.textBoxValue.Size = New System.Drawing.Size(89, 20)
+		Me.textBoxValue.TabIndex = 0
+		Me.textBoxValue.TabStop = false
 		'
 		'label6
 		'
@@ -208,7 +230,7 @@ Partial Class DBUpdaterInfoControl
 		Me.label6.Name = "label6"
 		Me.label6.Size = New System.Drawing.Size(50, 20)
 		Me.label6.TabIndex = 14
-		Me.label6.Text = "Outgoing"
+		Me.label6.Text = "Value"
 		Me.label6.TextAlign = System.Drawing.ContentAlignment.TopRight
 		'
 		'textBoxDate
@@ -362,7 +384,8 @@ Partial Class DBUpdaterInfoControl
 		Me.buttonSubCategories.Location = New System.Drawing.Point(445, 43)
 		Me.buttonSubCategories.Name = "buttonSubCategories"
 		Me.buttonSubCategories.Size = New System.Drawing.Size(24, 21)
-		Me.buttonSubCategories.TabIndex = 5
+		Me.buttonSubCategories.TabIndex = 8
+		Me.buttonSubCategories.TabStop = false
 		Me.buttonSubCategories.Text = "..."
 		Me.buttonSubCategories.TextAlign = System.Drawing.ContentAlignment.TopCenter
 		Me.buttonSubCategories.UseVisualStyleBackColor = true
@@ -372,7 +395,7 @@ Partial Class DBUpdaterInfoControl
 		Me.buttonCategories.Location = New System.Drawing.Point(445, 16)
 		Me.buttonCategories.Name = "buttonCategories"
 		Me.buttonCategories.Size = New System.Drawing.Size(24, 21)
-		Me.buttonCategories.TabIndex = 4
+		Me.buttonCategories.TabIndex = 6
 		Me.buttonCategories.Text = "..."
 		Me.buttonCategories.TextAlign = System.Drawing.ContentAlignment.TopCenter
 		Me.buttonCategories.UseVisualStyleBackColor = true
@@ -399,22 +422,25 @@ Partial Class DBUpdaterInfoControl
 		'dropBoxSubCategory
 		'
 		Me.dropBoxSubCategory.AutoCompleteCustomSource.AddRange(New String() {"<new>"})
+		Me.dropBoxSubCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.dropBoxSubCategory.Enabled = false
 		Me.dropBoxSubCategory.FormattingEnabled = true
 		Me.dropBoxSubCategory.Location = New System.Drawing.Point(103, 43)
 		Me.dropBoxSubCategory.Name = "dropBoxSubCategory"
 		Me.dropBoxSubCategory.Size = New System.Drawing.Size(336, 21)
-		Me.dropBoxSubCategory.TabIndex = 1
+		Me.dropBoxSubCategory.TabIndex = 7
+		Me.dropBoxSubCategory.TabStop = false
 		'
 		'dropBoxCategory
 		'
+		Me.dropBoxCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.dropBoxCategory.FormattingEnabled = true
 		Me.dropBoxCategory.Location = New System.Drawing.Point(103, 16)
 		Me.dropBoxCategory.MaxDropDownItems = 10
 		Me.dropBoxCategory.Name = "dropBoxCategory"
 		Me.dropBoxCategory.Size = New System.Drawing.Size(336, 21)
 		Me.dropBoxCategory.Sorted = true
-		Me.dropBoxCategory.TabIndex = 0
+		Me.dropBoxCategory.TabIndex = 5
 		AddHandler Me.dropBoxCategory.SelectedIndexChanged, AddressOf Me.DropBoxCategorySelectedIndexChanged
 		AddHandler Me.dropBoxCategory.MouseDown, AddressOf Me.DropBoxCategoryMouseDoubleClick
 		'
@@ -436,6 +462,8 @@ Partial Class DBUpdaterInfoControl
 		Me.ResumeLayout(false)
 		Me.PerformLayout
 	End Sub
+	Private checkBoxReciept As System.Windows.Forms.CheckBox
+	Private textBoxRecieptNumber As System.Windows.Forms.TextBox
 	Private bindingNavigatorAdd As System.Windows.Forms.ToolStripButton
 	Private bindingNavigatorDelete As System.Windows.Forms.ToolStripButton
 	Private buttonNotes As System.Windows.Forms.Button
@@ -462,7 +490,7 @@ Partial Class DBUpdaterInfoControl
 	Private label3 As System.Windows.Forms.Label
 	Private textBoxDate As System.Windows.Forms.TextBox
 	Private label6 As System.Windows.Forms.Label
-	Private textBoxOut As System.Windows.Forms.TextBox
+	Private textBoxValue As System.Windows.Forms.TextBox
 	Private label7 As System.Windows.Forms.Label
 	Private textBoxBank As System.Windows.Forms.TextBox
 	Private label8 As System.Windows.Forms.Label

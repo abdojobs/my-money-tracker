@@ -60,7 +60,7 @@ Public Partial Class DBUpdaterNotesForm
 			
 		' We get the category that goes with this selection
 		m_categoryResult = g_sql.Sql.SearchForItem("categories", g_sql.TableName, String.Format("name=>{0}", dataGridView.Rows(e.RowIndex).Cells(0).Value.ToString))
-		m_categoryResult = g_sql.Sql.SearchForItem("name", g_sql.CatTableName, String.Format("id=>{0}", m_categoryResult))
+		m_categoryResult = g_sql.Sql.SearchForItem("categoryname", g_sql.CatTableName, String.Format("id=>{0}", m_categoryResult))
 		
 		If m_categoryResult Is Nothing Then
 			m_categoryResult = "<new>"
@@ -112,7 +112,7 @@ Public Partial Class DBUpdaterNotesForm
 			search = "("
 				
 			' Split up the name a do a search for similar ones
-			Dim words() As String = searchContext.Split(New Char() {" "c})
+			Dim words() As String = Split(searchContext, " ")
 			
 			For Each word In words
 				If word.Length > 3 Then
@@ -128,8 +128,7 @@ Public Partial Class DBUpdaterNotesForm
 		End If
 		
 		' Create the data connection
-		Dim bs As BindingSource = g_sql.Sql.BindingDatabase(String.Format("SELECT name,comment FROM {0} WHERE {1} comment IS NOT NULL AND categories IS NOT NULL", g_sql.TableName, search))
-		dataGridView.DataSource = bs
+		dataGridView.DataSource = g_sql.Sql.GetDataTable(String.Format("SELECT name,comment FROM {0} WHERE {1} comment IS NOT NULL AND categories IS NOT NULL", g_sql.TableName, search))
 		
 	End Sub
 	
