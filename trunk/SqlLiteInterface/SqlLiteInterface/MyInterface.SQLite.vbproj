@@ -70,7 +70,6 @@
   <ItemGroup>
     <Compile Include="Criteria.vb" />
     <Compile Include="CriteriaCollection.vb" />
-    <Compile Include="Globals.vb" />
     <Compile Include="Properties\AssemblyInfo.vb" />
     <Compile Include="SQLiteDatabase.vb" />
   </ItemGroup>
