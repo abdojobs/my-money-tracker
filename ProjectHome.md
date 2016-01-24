@@ -1,0 +1,3 @@
+This project is a first time google code project for me.  It is developed in VB using SharpDeveloper and .NET  I am creating this program mostly for myself, however if it will benefit others, well so be it.  The concept of this program is to take in a CSV file and unify it to a standard, then load that data into a SQLite Database.  Once loaded the user can then look over the individual entries and set comments about the transaction and a category / sub category it belongs in.  This data then can be searched and display on screen in many different forms, such as a data table or print screen or best of all will be the xls.  This is probably a repeat of any number of projects out there, but it is my little fun.
+
+Hope you can use it!
